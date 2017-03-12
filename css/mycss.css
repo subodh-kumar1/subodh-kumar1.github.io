@@ -1,0 +1,47 @@
+html, body, .container
+{
+    height: 100%; 
+    min-height: 100%;
+}
+.first {
+    float: left;
+    width: 30%;
+    height: 20%;
+    margin: auto;
+    background-color: red;
+}
+.second{
+    float: left;
+    width: 30%;
+    height: 20%;
+    margin: auto;
+    background-color: blue;
+}
+.third{
+    float: left;
+    width: 30%;
+    height: 20%;
+    margin: auto;
+    background-color: red;
+}
+.fourth{
+    float: left;
+    width: 30%;
+    height: 20%;
+    margin: auto;
+    background-color: blue;
+}
+.fifth{
+    float: left;
+    width: 30%;
+    height: 20%;
+    margin: auto;
+    background-color: red;
+}
+.sixth{
+    float: left;
+    width: 30%;
+    height: 20%;
+    margin: auto;
+    background-color: blue;
+}
