@@ -1,0 +1,173 @@
+.name {
+    align-content: center;
+    font-size: 48px;
+    margin-top: 0px;
+    padding: 0;
+    line-height: 1;
+    font-weight: 700;
+    
+    color: whitesmoke;
+    filter: drop-shadow(2px 4px 6px black);
+}
+body {
+    background-color: black;
+    margin: 0;
+    font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.navitem{
+    color: gainsboro;
+    text-decoration: none;
+ }
+ .navitem:hover{
+    color: white;
+ }
+.container {
+    width: 100%;
+    text-align: center;
+    min-height: 90vh;
+    padding-top: 70px;
+}
+
+.iam {
+    color: whitesmoke;
+    display: inline;
+    background-color: rgba(0,0,0,0.7);
+}
+.intro {
+    color: #2ce080;
+    display: inline;
+}
+pre {
+    color: blanchedalmond;
+}
+.social-links {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+}
+.social-links a {
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    line-height: 1;
+    margin-right: 8px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+.social-links a:hover {
+    background: #2ce080;
+}
+footer {
+    margin: 0;
+}
+.footer-content {
+    background-color: rgba(22, 22, 23, .8);
+    width: 100vw;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    bottom: 0;
+}
+.navbar.sticky {
+    padding: 2px 40px;
+    background-color: #0f171e;
+    background-image: linear-gradient(180deg,#1b2530 0,rgba(27,37,48,.85));
+    color: whitesmoke;
+}
+.navbar {
+    position: fixed;
+    width: 100%;
+    padding: 10px 0;
+    z-index: 999;
+    transition: all 0.3s ease;
+}
+.menubar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.navbar .menubar li {
+    list-style: none;
+    display: inline-block;
+    padding: 0 10px;
+}
+.menubar .max-width {
+    max-width: 1300px;
+    padding: 0 80px;
+    margin: auto;
+}
+.menu {
+    padding-right: 80px;
+}
+.companylogo{
+    display: inline;
+    border-radius: 8px;
+}
+.experienceparent{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 10px;
+    color: darkgrey;
+    gap: 48px;
+    margin: 0 70px
+}
+.companyparent {
+    width: 100px;
+    height: 100px;
+    display: flow-root;
+    margin: 10px;
+    margin-top: 0;
+    border: solid cadetblue;
+    color: white;
+    padding: inherit;
+}
+.workdetails {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: baseline;
+    padding: 10px;
+}
+.position {
+    font-size: x-large;
+    color: white;
+}
+.duration {
+    font-weight: lighter;
+}
+.location {
+    font-size: small;
+}
+.skilllist {
+    text-align: start;
+    display: flex;
+    flex-direction: row;
+    column-gap: 48px;
+    padding-left: 16px;
+}
+.skilllistitem{
+    display: list-item;
+}
+.cvobject{
+    height: 80vh;
+}
+#homesection{
+    background-image: url("assets/backgroundHome.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+#experiencesection{
+    background-color: #0f171e;;
+}
+#skillsssection{
+    background: rgb(4, 31, 65);
+}
+#cvsection{
+    background-color: azure;
+}
