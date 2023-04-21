@@ -240,14 +240,32 @@ createExperienceSection();
     Project Section
 */
 
-const createProjectSection = () => {
-  const skills = document.getElementById("skillsssection");
+const skills = [
+  { src: "./assets/java.png", alt: "java" },
+  { src: "./assets/react.png", alt: "react" },
+  { src: "./assets/html-5.png", alt: "html" },
+  { src: "./assets/css-3.png", alt: "css" },
+  { src: "./assets/java-script.png", alt: "js" },
+  { src: "./assets/code.png", alt: "coding" },
+  { src: "./assets/cloud-data.png", alt: "cloud" },
+  { src: "./assets/algorithm.png", alt: "algorithms" },
+];
+
+const createSkillsSection = () => {
+  const skillsSsection = document.getElementById("skillsssection");
   const skillsDiv = document.createElement("div");
   skillsDiv.setAttribute("class", "skillsdiv");
-  const skillsImage = document.createElement("img");
-  skillsImage.setAttribute("src", "./assets/Skills.png");
-  skillsImage.setAttribute("alt", "TECH STACK");
-  skillsDiv.append(skillsImage);
-  skills.append(skillsDiv);
+
+  skills.forEach((skill) => {
+    const div = document.createElement("div");
+    div.setAttribute("class", "skilldiv");
+    const img = document.createElement("img");
+    img.setAttribute("src", skill?.src);
+    img.setAttribute("alt", skill?.alt);
+    img.setAttribute("width", 250);
+    div.append(img);
+    skillsDiv.append(div);
+  });
+  skillsSsection.append(skillsDiv);
 };
-createProjectSection();
+createSkillsSection();

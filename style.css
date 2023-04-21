@@ -156,8 +156,22 @@ footer {
 .cvobject{
     height: 80vh;
 }
+.skillsdiv{
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+    gap:10px 30px;
+    padding: 100px;
+}
+.skilldiv{
+    border: 1px solid black;
+    border-radius: 10%;
+    padding: 15px 30px;
+    box-shadow: 2px 2px darkslateblue;
+    margin: 10px;
+}
 #homesection{
-    background-image: url("assets/backgroundHome.jpg");
+    background-image: url("assets/background3.jpeg");
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -166,7 +180,7 @@ footer {
     background-color: #0f171e;;
 }
 #skillsssection{
-    background: rgb(4, 31, 65);
+    background: cornflowerblue;
 }
 #cvsection{
     background-color: azure;
