@@ -173,6 +173,9 @@ const getCompany = (companyName, media, companyUrl) => {
   companyLogoTag.setAttribute("width", "48");
   companyLogoTag.setAttribute("height", "48");
   companyTag.append(companyName);
+  companyLogoTag.addEventListener("click", () => {
+    window.open(companyUrl, "_blank");
+  });
   companyParentTag.append(companyLogoTag);
   companyParentTag.append(companyTag);
   return companyParentTag;
@@ -209,26 +212,24 @@ const getWorkDetails = (duration, location, position, skills) => {
 
   return workDetailsContainer;
 };
-const getExperience = ({
-  companyName,
-  duration,
-  location,
-  position,
-  skills,
-  media,
-  companyUrl,
-}) => {
+const getExperience = (
+  { companyName, duration, location, position, skills, companyUrl },
+  companyLogo
+) => {
   const experienceTag = document.createElement("div");
   experienceTag.setAttribute("class", "experienceparent");
-  experienceTag.append(getCompany(companyName, media, companyUrl));
+  experienceTag.append(getCompany(companyName, companyLogo, companyUrl));
   experienceTag.append(getWorkDetails(duration, location, position, skills));
   return experienceTag;
 };
 
 const createExperienceSection = () => {
   const experience = document.getElementById("experiencesection");
-  experienceData.forEach((experienceCompany) => {
-    const currentExperience = getExperience(experienceCompany);
+  experienceData.forEach((experienceCompany, idx) => {
+    const currentExperience = getExperience(
+      experienceCompany,
+      `./assets/joblogo${idx}.jpg`
+    );
     experience.append(currentExperience);
   });
   // experience.innerHTML = "Hello";
@@ -240,32 +241,32 @@ createExperienceSection();
     Project Section
 */
 
-const skills = [
-  { src: "./assets/java.png", alt: "java" },
-  { src: "./assets/react.png", alt: "react" },
-  { src: "./assets/html-5.png", alt: "html" },
-  { src: "./assets/css-3.png", alt: "css" },
-  { src: "./assets/java-script.png", alt: "js" },
-  { src: "./assets/code.png", alt: "coding" },
-  { src: "./assets/cloud-data.png", alt: "cloud" },
-  { src: "./assets/algorithm.png", alt: "algorithms" },
-];
+// const skills = [
+//   { src: "./assets/java.png", alt: "java" },
+//   { src: "./assets/react.png", alt: "react" },
+//   { src: "./assets/html-5.png", alt: "html" },
+//   { src: "./assets/css-3.png", alt: "css" },
+//   { src: "./assets/java-script.png", alt: "js" },
+//   { src: "./assets/code.png", alt: "coding" },
+//   { src: "./assets/cloud-data.png", alt: "cloud" },
+//   { src: "./assets/algorithm.png", alt: "algorithms" },
+// ];
 
-const createSkillsSection = () => {
-  const skillsSsection = document.getElementById("skillsssection");
-  const skillsDiv = document.createElement("div");
-  skillsDiv.setAttribute("class", "skillsdiv");
+// const createSkillsSection = () => {
+//   const skillsSsection = document.getElementById("skillsssection");
+//   const skillsDiv = document.createElement("div");
+//   skillsDiv.setAttribute("class", "skillsdiv");
 
-  skills.forEach((skill) => {
-    const div = document.createElement("div");
-    div.setAttribute("class", "skilldiv");
-    const img = document.createElement("img");
-    img.setAttribute("src", skill?.src);
-    img.setAttribute("alt", skill?.alt);
-    img.setAttribute("width", 250);
-    div.append(img);
-    skillsDiv.append(div);
-  });
-  skillsSsection.append(skillsDiv);
-};
-createSkillsSection();
+//   skills.forEach((skill) => {
+//     const div = document.createElement("div");
+//     div.setAttribute("class", "skilldiv");
+//     const img = document.createElement("img");
+//     img.setAttribute("src", skill?.src);
+//     img.setAttribute("alt", skill?.alt);
+//     img.setAttribute("width", 250);
+//     div.append(img);
+//     skillsDiv.append(div);
+//   });
+//   skillsSsection.append(skillsDiv);
+// };
+// createSkillsSection();

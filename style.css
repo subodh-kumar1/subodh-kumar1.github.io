@@ -106,6 +106,7 @@ footer {
 .companylogo{
     display: inline;
     border-radius: 8px;
+    cursor: pointer;
 }
 .experienceparent{
     display: flex;
