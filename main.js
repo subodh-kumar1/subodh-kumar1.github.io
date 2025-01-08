@@ -101,9 +101,19 @@ createHomeSection();
 
 const experienceData = [
   {
+    companyName: "EPAM Systems",
+    companyUrl: "https://epam.com",
+    duration: "Apr 2024 - Present",
+    location: "Gurugram, Haryana, India",
+    position: "Senior Software Engineer",
+    media:
+      "https://media.licdn.com/dms/image/v2/D4D0BAQGCvAy6jBv3eQ/company-logo_100_100/company-logo_100_100/0/1736349440203/epam_systems_logo?e=1744243200&v=beta&t=Akt7P9TeahmnoZSNUdq-U9RlQFTcFdbCStCtdPVUtZA",
+    skills: ["React", "React Hooks", "Redux", "Java", "Springboot"],
+  },
+  {
     companyName: "GlobalLogic India",
     companyUrl: "https://globallogic.com",
-    duration: "Nov 2021 - Present",
+    duration: "Nov 2021 - Apr 2024",
     location: "Noida, Uttar Pradesh, India",
     position: "Associate Consultant Engineering",
     media:
