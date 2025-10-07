@@ -2,7 +2,7 @@ export default cvData = {
     myDetails: {
         name: "Subodh Kumar",
         contact: {
-            whatsapp: 9449210852,
+            whatsapp: 8076561176,
             call: 8076561176
         }
     }

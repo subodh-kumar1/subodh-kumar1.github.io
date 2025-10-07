@@ -5,7 +5,7 @@ const homeSectionData = {
   myDetails: {
     name: "Subodh Kumar",
     intro: [
-      "Associate Consultant at Globallogic!!",
+      "Senior Software Engineer at EPAM Systems!!",
       "Frontend Developer by profession!!",
       "Problem Solver by Passion!!",
     ],
@@ -14,7 +14,7 @@ const homeSectionData = {
     },
     socialHandles: {
       linkedin: "https://www.linkedin.com/in/subodh-kr/",
-      whatsapp: "https://wa.me/919449210852",
+      whatsapp: "https://wa.me/918076561176",
       github: "https://github.com/subodh-kumar1",
       mail: "mailto:subodh.subodhkumar1@gmail.com",
     },
