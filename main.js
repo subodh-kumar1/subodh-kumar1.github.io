@@ -47,6 +47,8 @@ const getLink = (content, type) => {
   const linkTag = document.createElement("a");
   linkTag.setAttribute("href", content);
   linkTag.setAttribute("target", "_blank");
+  linkTag.setAttribute("rel", "noopener noreferrer");
+  linkTag.setAttribute("aria-label", type);
 
   const icon = document.createElement("i");
   icon.setAttribute("class", iconClasses[type]);
@@ -67,7 +69,8 @@ const getSocialLinks = (socialHandles) => {
 const getFooterContent = (number) => {
   const footerContent = document.createElement("div");
   footerContent.setAttribute("class", "footer-content");
-  footerContent.innerHTML = `<div>Call me at ${number}</div><div>All Rights reserved &copy; 2023</div>`;
+  const year = new Date().getFullYear();
+  footerContent.innerHTML = `<div>Call me at <a href="tel:${number}">${number}</a></div><div>All rights reserved &copy; ${year}</div>`;
   return footerContent;
 };
 const createHomeSection = () => {
@@ -178,13 +181,14 @@ const getCompany = (companyName, media, companyUrl) => {
   companyParentTag.setAttribute("class", "companyparent");
   const companyLogoTag = document.createElement("img");
   companyLogoTag.setAttribute("src", media);
-  companyLogoTag.setAttribute("alt", companyName);
+  companyLogoTag.setAttribute("alt", companyName + ' logo');
   companyLogoTag.setAttribute("class", "companylogo");
   companyLogoTag.setAttribute("width", "48");
   companyLogoTag.setAttribute("height", "48");
+  companyLogoTag.setAttribute("loading", "lazy");
   companyTag.append(companyName);
   companyLogoTag.addEventListener("click", () => {
-    window.open(companyUrl, "_blank");
+    window.open(companyUrl, "_blank", "noopener,noreferrer");
   });
   companyParentTag.append(companyLogoTag);
   companyParentTag.append(companyTag);
@@ -242,41 +246,147 @@ const createExperienceSection = () => {
     );
     experience.append(currentExperience);
   });
-  // experience.innerHTML = "Hello";
 };
 
 createExperienceSection();
 
-/*
-    Project Section
-*/
+/* Contact form handling (Formspree friendly) */
+(function(){
+  const form = document.getElementById('contact-form');
+  const status = document.getElementById('contact-status');
 
-// const skills = [
-//   { src: "./assets/java.png", alt: "java" },
-//   { src: "./assets/react.png", alt: "react" },
-//   { src: "./assets/html-5.png", alt: "html" },
-//   { src: "./assets/css-3.png", alt: "css" },
-//   { src: "./assets/java-script.png", alt: "js" },
-//   { src: "./assets/code.png", alt: "coding" },
-//   { src: "./assets/cloud-data.png", alt: "cloud" },
-//   { src: "./assets/algorithm.png", alt: "algorithms" },
-// ];
+  if(!form) return;
 
-// const createSkillsSection = () => {
-//   const skillsSsection = document.getElementById("skillsssection");
-//   const skillsDiv = document.createElement("div");
-//   skillsDiv.setAttribute("class", "skillsdiv");
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    status.textContent = 'Sending…';
+    const action = form.getAttribute('action');
+    try{
+      const data = new FormData(form);
+      const res = await fetch(action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' }});
+      if(res.ok){
+        status.textContent = 'Thanks—your message has been sent!';
+        form.reset();
+        // analytics event
+        if(window.dataLayer) window.dataLayer.push({ event: 'contact_form_sent' });
+        console.log('Contact form sent');
+      } else {
+        const json = await res.json();
+        status.textContent = json?.error || 'Oops, there was a problem sending your message.';
+      }
+    }catch(err){
+      status.textContent = 'Network error. Please try again later.';
+    }
+  });
+})();
 
-//   skills.forEach((skill) => {
-//     const div = document.createElement("div");
-//     div.setAttribute("class", "skilldiv");
-//     const img = document.createElement("img");
-//     img.setAttribute("src", skill?.src);
-//     img.setAttribute("alt", skill?.alt);
-//     img.setAttribute("width", 250);
-//     div.append(img);
-//     skillsDiv.append(div);
-//   });
-//   skillsSsection.append(skillsDiv);
-// };
-// createSkillsSection();
+/* UI Animations: reveal on scroll, background float, button pulse */
+(function(){
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // elements to reveal
+  const revealSelectors = ['.name', '.intro', '.social-links', '.companyparent', '#cvsection', '#contactsection', 'footer'];
+  const revealEls = revealSelectors.map(s => document.querySelector(s)).filter(Boolean);
+
+  revealEls.forEach(el => el.classList.add('reveal'));
+
+  // stagger children (social links, experience items)
+  document.querySelectorAll('.social-links, .experienceparent').forEach(container => {
+    container.classList.add('reveal-stagger');
+    Array.from(container.children).forEach((child, i) => child.style.setProperty('--stagger-index', i));
+  });
+
+  if(!prefersReduced){
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0.15});
+
+    document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => observer.observe(el));
+
+    // float background overlay for subtle motion
+    const overlay = document.querySelector('.bg-overlay');
+    overlay && overlay.classList.add('float');
+
+    // quick pulse for resume button then remove
+    const resumeBtn = document.getElementById('resume-download');
+    if(resumeBtn){
+      resumeBtn.classList.add('pulse');
+      setTimeout(()=> resumeBtn.classList.remove('pulse'), 4200);
+    }
+
+    // social icons pop stagger
+    document.querySelectorAll('.social-links a').forEach((a, i) => setTimeout(()=> a.classList.add('pop'), 400 + i*120));
+    // remove pop after a while to allow hover effects
+    setTimeout(()=> document.querySelectorAll('.social-links a.pop').forEach(a=>a.classList.remove('pop')), 2800);
+  }
+})();
+
+
+/* Progressive hero background loader: try WebP then JPG, add class when ready */
+(function(){
+  const home = document.getElementById('homesection');
+  if(!home) return;
+  const loadImg = (src) => new Promise((res, rej)=>{
+    const img = new Image();
+    img.src = src;
+    img.onload = ()=>res(src);
+    img.onerror = ()=>rej(src);
+  });
+
+  // try webp first for smaller/faster image when available
+  loadImg('assets/background3.webp').then((src)=>{
+    home.style.backgroundImage = `linear-gradient(180deg, rgba(2,6,10,0.35), rgba(2,6,10,0.25)), url('${src}')`;
+    home.classList.add('bg-loaded');
+  }).catch(()=>{
+    // fallback to JPG
+    loadImg('assets/background3.jpg').then((src)=>{
+      home.style.backgroundImage = `linear-gradient(180deg, rgba(2,6,10,0.35), rgba(2,6,10,0.25)), url('${src}')`;
+      home.classList.add('bg-loaded');
+    }).catch(()=>{
+      // no background available — keep gradient only
+    });
+  });
+})();
+
+/* Responsive nav behaviors: shrink navbar on scroll, close menu on outside click or ESC */
+(function(){
+  const navbar = document.querySelector('.navbar');
+  const navToggle = document.querySelector('.nav-toggle');
+  const menu = document.getElementById('primary-menu');
+
+  function onScroll(){
+    if(window.scrollY > 80) navbar && navbar.classList.add('small');
+    else navbar && navbar.classList.remove('small');
+  }
+  window.addEventListener('scroll', onScroll);
+  onScroll();
+
+  // Close menu when clicking outside
+  document.addEventListener('click', (e)=>{
+    if(!menu.contains(e.target) && !navToggle.contains(e.target)){
+      menu.classList.remove('open');
+      navToggle && navToggle.setAttribute('aria-expanded','false');
+    }
+  });
+
+  // Close menu on Escape key
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape'){
+      menu.classList.remove('open');
+      navToggle && navToggle.setAttribute('aria-expanded','false');
+      navToggle && navToggle.focus();
+    }
+  });
+
+  // Prevent body scroll when menu is open on small screens
+  const observer = new MutationObserver(()=>{
+    if(menu.classList.contains('open')) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = '';
+  });
+  observer.observe(menu, { attributes: true, attributeFilter: ['class'] });
+})();

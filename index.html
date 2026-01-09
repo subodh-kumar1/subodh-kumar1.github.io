@@ -1,7 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Subodh Kumar</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Subodh Kumar — Senior Software Engineer</title>
+    <meta name="description" content="Subodh Kumar — Senior Software Engineer. Frontend developer (React) with experience in Java and Spring Boot.">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Subodh Kumar — Senior Software Engineer">
+    <meta property="og:description" content="Frontend engineer experienced in React, Redux, and Java Spring Boot.">
+    <meta property="og:image" content="assets/Avatar.jpeg">
+    <meta property="og:type" content="website">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/assets/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
@@ -10,19 +24,27 @@
     <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
   </head>
   <body>
+    <a class="skip-link" href="#homesection">Skip to content</a> <!-- accessibility -->
     <header>
-      <nav class="navbar sticky">
+      <nav class="navbar sticky" role="navigation" aria-label="Main Navigation">
         <div class="menubar max-width">
           <div>
             <img
+              class="avatar"
+              loading="lazy"
               style="border-radius: 50%"
               height="48px"
               width="48px"
               src="assets/Avatar.jpeg"
-              alt="LOGO"
+              alt="Subodh Kumar avatar"
             />
           </div>
-          <div class="menu">
+
+          <button class="nav-toggle" aria-controls="primary-menu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="fa fa-bars"></span>
+          </button>
+
+          <div class="menu" id="primary-menu">
             <ul>
               <li><a class="navitem" href="#home">Home</a></li>
               <li><a class="navitem" href="#experience">Experience</a></li>
@@ -36,18 +58,22 @@
       </nav>
     </header>
     <section id="home">
-      <div id="homesection" class="container"></div>
+      <div id="homesection" class="container">
+        <div class="bg-overlay" aria-hidden="true"></div>
+      </div>
     </section>
     <section id="experience">
       <div id="experiencesection" class="container"></div>
     </section>
+
     <!-- <section id="skills">
       <div id="skillsssection" class="container"></div>
     </section> -->
     <section id="cv">
-      <div id="cvsection" class="container">
+      <div id="cvsection" class="container" role="region" aria-labelledby="cv-heading">
+        <h2 id="cv-heading">Resume</h2>
         <div>
-          <a href="./assets/Subodh Kumar 2025 CV.pdf" target="_blank">DOWNLOAD</a>
+          <a id="resume-download" class="btn primary" href="./assets/Subodh Kumar 2025 CV.pdf" target="_blank" rel="noopener">Download Resume</a>
         </div>
         <object
           data="./assets/Subodh Kumar 2025 CV.pdf"
@@ -55,13 +81,57 @@
           class="cvobject"
         >
           <p>
-            Alternative text - include a link
-            <a href="./assets/Subodh Kumar 2025 CV.pdf">to the PDF!</a>
+            If you cannot view the PDF, you can
+            <a href="./assets/Subodh Kumar 2025 CV.pdf">download it here</a>.
           </p>
         </object>
       </div>
     </section>
+
+    <section id="contact">
+      <div id="contactsection" class="container" role="region" aria-labelledby="contact-heading">
+        <h2 id="contact-heading">Contact</h2>
+        <p class="contact-lead">Want to collaborate? Send a quick message — I reply within a few days.</p>
+
+        <!-- Replace the action URL with your Formspree endpoint: https://formspree.io/f/your-id -->
+        <form id="contact-form" class="contact-form" method="POST" action="https://formspree.io/f/REPLACE_ME" novalidate>
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" required>
+
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required>
+
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="6" required></textarea>
+
+          <!-- honeypot to prevent spam -->
+          <input type="text" name="_gotcha" style="display:none">
+
+          <button id="contact-submit" class="btn primary" type="submit">Send message</button>
+
+          <div id="contact-status" class="contact-status" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
     <footer id="footer"></footer>
     <script src="main.js"></script>
+    <script>
+      // Accessible nav toggle
+      (function(){
+        const navToggle = document.querySelector('.nav-toggle');
+        const menu = document.getElementById('primary-menu');
+        navToggle && navToggle.addEventListener('click', function(){
+          const expanded = this.getAttribute('aria-expanded') === 'true';
+          this.setAttribute('aria-expanded', String(!expanded));
+          menu.classList.toggle('open');
+        });
+
+        // Close menu when a nav link is clicked (mobile)
+        document.querySelectorAll('.menu a').forEach(a => a.addEventListener('click', ()=>{
+          menu.classList.remove('open');
+          navToggle && navToggle.setAttribute('aria-expanded', 'false');
+        }));
+      })();
+    </script>
   </body>
 </html>
