@@ -49,11 +49,18 @@ const getLink = (content, type) => {
   linkTag.setAttribute("target", "_blank");
   linkTag.setAttribute("rel", "noopener noreferrer");
   linkTag.setAttribute("aria-label", type);
+  linkTag.setAttribute("title", type.charAt(0).toUpperCase() + type.slice(1));
 
   const icon = document.createElement("i");
   icon.setAttribute("class", iconClasses[type]);
+  icon.setAttribute("aria-hidden", "true");
+
+  const sr = document.createElement("span");
+  sr.setAttribute("class", "sr-only");
+  sr.textContent = type.charAt(0).toUpperCase() + type.slice(1);
 
   linkTag.append(icon);
+  linkTag.append(sr);
   return linkTag;
 };
 const getSocialLinks = (socialHandles) => {
@@ -75,18 +82,64 @@ const getFooterContent = (number) => {
 };
 const createHomeSection = () => {
   const home = document.getElementById("homesection");
-  //home.innerHTML = `<pre>${JSON.stringify(homeSectionData, undefined, 4)}</pre>`;
+  // clear in case of re-render
+  home.innerHTML = '';
+
   const name = getName(homeSectionData?.myDetails?.name);
   const nameTitle = getIntro();
   const socialLinks = getSocialLinks(homeSectionData?.myDetails?.socialHandles);
   const footerContent = getFooterContent(
     homeSectionData?.myDetails?.contact?.call
   );
-  home.append(name);
-  home.append(nameTitle);
-  home.append(socialLinks);
+
+  const hero = document.createElement('div');
+  hero.setAttribute('class', 'hero-content reveal');
+
+  const avatarLarge = document.createElement('img');
+  avatarLarge.setAttribute('class', 'avatar avatar-large reveal');
+  avatarLarge.setAttribute('src', 'assets/Avatar.jpeg');
+  avatarLarge.setAttribute('alt', homeSectionData?.myDetails?.name + ' avatar');
+  avatarLarge.setAttribute('width','120');
+  avatarLarge.setAttribute('height','120');
+  avatarLarge.setAttribute('loading','lazy');
+
+  const subtitle = document.createElement('p');
+  subtitle.setAttribute('class', 'hero-subtitle');
+  subtitle.append('I build thoughtful, accessible web applications and scalable systems.');
+
+  const ctaWrap = document.createElement('div');
+  ctaWrap.setAttribute('class', 'hero-cta');
+  const cta = document.createElement('a');
+  cta.setAttribute('class', 'btn primary');
+  cta.setAttribute('href', '#contact');
+  cta.setAttribute('role', 'button');
+  cta.setAttribute('aria-label','Contact Subodh');
+  cta.append("Let's talk");
+  cta.addEventListener('click', () => {
+    if(window.dataLayer) window.dataLayer.push({ event: 'cta_contact_clicked' });
+  });
+
+  const resumeBtn = document.createElement('a');
+  resumeBtn.setAttribute('class','btn ghost');
+  resumeBtn.setAttribute('href','./assets/Subodh Kumar 2025 CV.pdf');
+  resumeBtn.setAttribute('target','_blank');
+  resumeBtn.setAttribute('rel','noopener noreferrer');
+  resumeBtn.append('Download CV');
+
+  ctaWrap.append(cta, resumeBtn);
+
+  hero.append(avatarLarge);
+  hero.append(name);
+  hero.append(nameTitle);
+  hero.append(subtitle);
+  hero.append(ctaWrap);
+  hero.append(socialLinks);
+
+  home.append(hero);
+
   const footer = document.getElementById("footer");
   footer.append(footerContent);
+
   var typed = new Typed(".intro", {
     strings: homeSectionData?.myDetails?.intro,
     typeSpeed: 50,
@@ -269,7 +322,6 @@ createExperienceSection();
         form.reset();
         // analytics event
         if(window.dataLayer) window.dataLayer.push({ event: 'contact_form_sent' });
-        console.log('Contact form sent');
       } else {
         const json = await res.json();
         status.textContent = json?.error || 'Oops, there was a problem sending your message.';
@@ -315,8 +367,12 @@ createExperienceSection();
     // quick pulse for resume button then remove
     const resumeBtn = document.getElementById('resume-download');
     if(resumeBtn){
+      // add a gentle pulse then keep a subtle hover affordance for clicks
       resumeBtn.classList.add('pulse');
       setTimeout(()=> resumeBtn.classList.remove('pulse'), 4200);
+      // single micro-pulse for main CTA too (select dynamically)
+      const heroCta = document.querySelector('.hero-cta .btn.primary');
+      if(heroCta){ heroCta.classList.add('pulse'); setTimeout(()=> heroCta.classList.remove('pulse'), 1800); }
     }
 
     // social icons pop stagger
@@ -338,22 +394,44 @@ createExperienceSection();
     img.onerror = ()=>rej(src);
   });
 
-  // try webp first for smaller/faster image when available
-  loadImg('assets/background3.webp').then((src)=>{
-    home.style.backgroundImage = `linear-gradient(180deg, rgba(2,6,10,0.35), rgba(2,6,10,0.25)), url('${src}')`;
-    home.classList.add('bg-loaded');
-  }).catch(()=>{
-    // fallback to JPG
-    loadImg('assets/background3.jpg').then((src)=>{
-      home.style.backgroundImage = `linear-gradient(180deg, rgba(2,6,10,0.35), rgba(2,6,10,0.25)), url('${src}')`;
-      home.classList.add('bg-loaded');
-    }).catch(()=>{
-      // no background available — keep gradient only
-    });
-  });
+  // try multiple sources (webp → jpg → jpeg → other fallbacks)
+  const bgCandidates = [
+    'assets/background3.webp',
+    'assets/background3.jpg',
+    'assets/background3.jpeg',
+    'assets/backgroundHome.jpg',
+    'assets/background2.jpeg'
+  ];
+
+  (async function tryBackgrounds(){
+    for(const src of bgCandidates){
+      try{
+        await loadImg(src);
+        home.style.backgroundImage = `linear-gradient(180deg, rgba(2,6,10,0.35), rgba(2,6,10,0.25)), url('${src}')`;
+        home.classList.add('bg-loaded');
+        return;
+      }catch(e){ /* try next */ }
+    }
+    // none available — keep gradient only
+  })();
 })();
 
-/* Responsive nav behaviors: shrink navbar on scroll, close menu on outside click or ESC */
+// try to use generated noise.png (if present) to override default inline texture
+(function(){
+  const root = document.documentElement;
+  const load = (src)=> new Promise((res,rej)=>{
+    const i = new Image();
+    i.src = src;
+    i.onload = ()=>res(src);
+    i.onerror = ()=>rej(src);
+  });
+  load('assets/noise.png').then((src)=>{
+    root.style.setProperty('--page-texture', `url('${src}')`);
+    document.body.classList.add('texture-available');
+  }).catch(()=>{ /* keep inline SVG as fallback */ });
+})();
+
+/* Responsive nav behaviors: shrink navbar on scroll, accessible toggle, close menu on outside click or ESC */
 (function(){
   const navbar = document.querySelector('.navbar');
   const navToggle = document.querySelector('.nav-toggle');
@@ -366,9 +444,18 @@ createExperienceSection();
   window.addEventListener('scroll', onScroll);
   onScroll();
 
+  // Toggle menu when nav toggle is clicked (accessible)
+  if(navToggle){
+    navToggle.addEventListener('click', function(){
+      const expanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', String(!expanded));
+      menu && menu.classList.toggle('open');
+    });
+  }
+
   // Close menu when clicking outside
   document.addEventListener('click', (e)=>{
-    if(!menu.contains(e.target) && !navToggle.contains(e.target)){
+    if(menu && !menu.contains(e.target) && navToggle && !navToggle.contains(e.target)){
       menu.classList.remove('open');
       navToggle && navToggle.setAttribute('aria-expanded','false');
     }
@@ -377,16 +464,22 @@ createExperienceSection();
   // Close menu on Escape key
   document.addEventListener('keydown', (e)=>{
     if(e.key === 'Escape'){
-      menu.classList.remove('open');
+      menu && menu.classList.remove('open');
       navToggle && navToggle.setAttribute('aria-expanded','false');
       navToggle && navToggle.focus();
     }
   });
 
+  // Close menu when a nav link is clicked (mobile)
+  document.querySelectorAll('.menu a').forEach(a => a.addEventListener('click', ()=>{
+    menu && menu.classList.remove('open');
+    navToggle && navToggle.setAttribute('aria-expanded','false');
+  }));
+
   // Prevent body scroll when menu is open on small screens
   const observer = new MutationObserver(()=>{
-    if(menu.classList.contains('open')) document.body.style.overflow = 'hidden';
+    if(menu && menu.classList.contains('open')) document.body.style.overflow = 'hidden';
     else document.body.style.overflow = '';
   });
-  observer.observe(menu, { attributes: true, attributeFilter: ['class'] });
+  menu && observer.observe(menu, { attributes: true, attributeFilter: ['class'] });
 })();

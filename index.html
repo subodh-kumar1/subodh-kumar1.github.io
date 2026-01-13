@@ -16,6 +16,10 @@
     <link rel="icon" href="/assets/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
@@ -48,17 +52,15 @@
             <ul>
               <li><a class="navitem" href="#home">Home</a></li>
               <li><a class="navitem" href="#experience">Experience</a></li>
-              <!-- <li><a class="navitem" href="#skills">Tech Stacks</a></li> -->
-              <li>
-                <a class="navitem" href="#cv">Resume </a>
-              </li>
+              <li><a class="navitem" href="#cv">Resume</a></li>
             </ul>
           </div>
         </div>
       </nav>
     </header>
     <section id="home">
-      <div id="homesection" class="container">
+      <div id="homesection" class="container" role="region" aria-labelledby="home-heading">
+        <h1 id="home-heading" class="sr-only">Home</h1>
         <div class="bg-overlay" aria-hidden="true"></div>
       </div>
     </section>
@@ -66,9 +68,7 @@
       <div id="experiencesection" class="container"></div>
     </section>
 
-    <!-- <section id="skills">
-      <div id="skillsssection" class="container"></div>
-    </section> -->
+
     <section id="cv">
       <div id="cvsection" class="container" role="region" aria-labelledby="cv-heading">
         <h2 id="cv-heading">Resume</h2>
@@ -115,23 +115,6 @@
     </section>
     <footer id="footer"></footer>
     <script src="main.js"></script>
-    <script>
-      // Accessible nav toggle
-      (function(){
-        const navToggle = document.querySelector('.nav-toggle');
-        const menu = document.getElementById('primary-menu');
-        navToggle && navToggle.addEventListener('click', function(){
-          const expanded = this.getAttribute('aria-expanded') === 'true';
-          this.setAttribute('aria-expanded', String(!expanded));
-          menu.classList.toggle('open');
-        });
-
-        // Close menu when a nav link is clicked (mobile)
-        document.querySelectorAll('.menu a').forEach(a => a.addEventListener('click', ()=>{
-          menu.classList.remove('open');
-          navToggle && navToggle.setAttribute('aria-expanded', 'false');
-        }));
-      })();
-    </script>
+    <!-- Navigation toggle handled in main.js -->
   </body>
 </html>
